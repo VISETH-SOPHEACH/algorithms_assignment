@@ -1,9 +1,8 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 using namespace std;
 
-// ─── Print Array ────────────────────────────────────────────────────────────
 void printArray(int a[], int n)
 {
   cout << "[ ";
@@ -12,69 +11,60 @@ void printArray(int a[], int n)
   cout << "]" << endl;
 }
 
-// ─── 1. Sequential Search ───────────────────────────────────────────────────
 void sequentialSearch(int a[], int n, int key)
 {
-  cout << "\n=== Sequential Search (key = " << key << ") ===" << endl;
+  cout << "\n=== Sequential Search Step by Step ===" << endl;
   cout << "Array: ";
   printArray(a, n);
-  cout << "Start scanning from index 0 to " << n - 1 << "..." << endl;
 
   int found = -1;
   for (int i = 0; i < n; i++)
   {
-    cout << "  Step " << i + 1 << ": Check index " << i
-         << " -> a[" << i << "] = " << a[i];
-
+    cout << "Step " << i + 1 << ": check a[" << i << "]=" << a[i];
     if (a[i] == key)
     {
       found = i;
-      cout << "  [FOUND] MATCH! Stop searching." << endl;
+      cout << " -> found" << endl;
       break;
     }
-    else
-    {
-      cout << "  [MISS] Not a match. Continue." << endl;
-    }
+    cout << " -> not a match" << endl;
   }
 
   if (found != -1)
     cout << "Result: Found " << key << " at index " << found << endl;
   else
-    cout << "Result: " << key << " not found in array." << endl;
+    cout << "Result: " << key << " not found" << endl;
 }
 
-// ─── 2. Binary Search ───────────────────────────────────────────────────────
 void binarySearch(int a[], int n, int key)
 {
-  cout << "\n=== Binary Search (key = " << key << ") ===" << endl;
-  cout << "Array (must be sorted): ";
+  cout << "\n=== Binary Search Step by Step ===" << endl;
+  cout << "Array must be sorted: ";
   printArray(a, n);
-  cout << "Using left/mid/right pointers to halve the search range..." << endl;
 
   int left = 0, right = n - 1, found = -1, step = 1;
 
   while (left <= right)
   {
     int mid = (left + right) / 2;
-    cout << "  Step " << step++ << ": left=" << left
+    cout << "Step " << step++ << ": left=" << left
          << ", mid=" << mid << ", right=" << right
-         << "  ->  a[mid]=" << a[mid];
+         << " -> a[mid]=" << a[mid];
 
     if (a[mid] == key)
     {
       found = mid;
-      cout << "  [FOUND] MATCH!" << endl;
+      cout << " -> found" << endl;
       break;
     }
     else if (a[mid] < key)
     {
-      cout << "  -> key is LARGER, move left to " << mid + 1 << endl;
+      cout << " -> key is larger, move left to " << mid + 1 << endl;
       left = mid + 1;
     }
     else
     {
-      cout << "  -> key is SMALLER, move right to " << mid - 1 << endl;
+      cout << " -> key is smaller, move right to " << mid - 1 << endl;
       right = mid - 1;
     }
   }
@@ -82,218 +72,252 @@ void binarySearch(int a[], int n, int key)
   if (found != -1)
     cout << "Result: Found " << key << " at index " << found << endl;
   else
-    cout << "Result: " << key << " not found in array." << endl;
+    cout << "Result: " << key << " not found" << endl;
 }
 
-// ─── 3. Bubble Sort ─────────────────────────────────────────────────────────
 void bubbleSort(int a[], int n)
 {
-  cout << "\n=== Bubble Sort ===" << endl;
+  cout << "\n=== Bubble Sort Step by Step ===" << endl;
   cout << "Initial array: ";
   printArray(a, n);
-  cout << "Repeatedly swap adjacent elements if left > right..." << endl;
 
   for (int i = 0; i < n - 1; i++)
   {
-    cout << "\n  Pass " << i + 1 << ":" << endl;
     bool swapped = false;
+    cout << "\nPass " << i + 1 << ":" << endl;
 
     for (int j = 0; j < n - i - 1; j++)
     {
-      cout << "    Compare a[" << j << "]=" << a[j]
+      cout << "  Compare a[" << j << "]=" << a[j]
            << " and a[" << j + 1 << "]=" << a[j + 1];
 
       if (a[j] > a[j + 1])
       {
         swap(a[j], a[j + 1]);
         swapped = true;
-        cout << "  -> SWAP -> Array: ";
+        cout << " -> swap -> ";
         printArray(a, n);
       }
       else
       {
-        cout << "  -> No swap" << endl;
+        cout << " -> no swap" << endl;
       }
     }
 
     if (!swapped)
     {
-      cout << "    No swaps in this pass -> array is already sorted. Stop early." << endl;
+      cout << "  No swaps in this pass, so the array is sorted." << endl;
       break;
     }
   }
 
-  cout << "Result: ";
+  cout << "\nSorted Array: ";
   printArray(a, n);
 }
 
-// ─── 4. Selection Sort ──────────────────────────────────────────────────────
 void selectionSort(int a[], int n)
 {
-  cout << "\n=== Selection Sort ===" << endl;
+  cout << "\n=== Selection Sort Step by Step ===" << endl;
   cout << "Initial array: ";
   printArray(a, n);
-  cout << "Find the minimum in the unsorted part and swap it to the front..." << endl;
 
   for (int i = 0; i < n - 1; i++)
   {
     int minIndex = i;
-    cout << "\n  Pass " << i + 1 << ": Unsorted range [" << i << ", " << n - 1 << "]" << endl;
-    cout << "    Assume minimum is a[" << i << "]=" << a[i] << endl;
+    cout << "\nPass " << i + 1 << ": find minimum from index "
+         << i << " to " << n - 1 << endl;
+    cout << "  Current minimum: a[" << minIndex << "]=" << a[minIndex] << endl;
 
     for (int j = i + 1; j < n; j++)
     {
-      cout << "    Check a[" << j << "]=" << a[j];
+      cout << "  Check a[" << j << "]=" << a[j];
       if (a[j] < a[minIndex])
       {
-        cout << "  < current min a[" << minIndex << "]=" << a[minIndex]
-             << "  -> New min index = " << j << endl;
         minIndex = j;
+        cout << " -> new minimum" << endl;
       }
       else
       {
-        cout << "  >= current min, skip." << endl;
+        cout << " -> keep current minimum" << endl;
       }
     }
 
     if (minIndex != i)
     {
-      cout << "    Swap a[" << i << "]=" << a[i]
+      cout << "  Swap a[" << i << "]=" << a[i]
            << " with a[" << minIndex << "]=" << a[minIndex] << endl;
       swap(a[i], a[minIndex]);
     }
     else
     {
-      cout << "    Minimum already in place, no swap needed." << endl;
+      cout << "  Minimum already in correct position." << endl;
     }
 
-    cout << "    Array now: ";
+    cout << "  Array now: ";
     printArray(a, n);
   }
 
-  cout << "Result: ";
+  cout << "\nSorted Array: ";
   printArray(a, n);
 }
 
-// ─── Heapify (with trace) ────────────────────────────────────────────────────
-void heapify(int a[], int n, int i, bool trace = false)
+void heapify(int a[], int heapSize, int i, int fullSize)
 {
   int largest = i;
   int left = 2 * i + 1;
   int right = 2 * i + 2;
 
-  if (left < n && a[left] > a[largest])
-    largest = left;
-  if (right < n && a[right] > a[largest])
-    largest = right;
+  cout << "    Heapify index " << i << " with heap size " << heapSize << endl;
+
+  if (left < heapSize)
+  {
+    cout << "      Left child a[" << left << "]=" << a[left] << endl;
+    if (a[left] > a[largest])
+      largest = left;
+  }
+
+  if (right < heapSize)
+  {
+    cout << "      Right child a[" << right << "]=" << a[right] << endl;
+    if (a[right] > a[largest])
+      largest = right;
+  }
 
   if (largest != i)
   {
-    if (trace)
-      cout << "      Heapify: swap a[" << i << "]=" << a[i]
-           << " with a[" << largest << "]=" << a[largest] << endl;
+    cout << "      Swap a[" << i << "]=" << a[i]
+         << " with a[" << largest << "]=" << a[largest] << endl;
     swap(a[i], a[largest]);
-    heapify(a, n, largest, trace);
+    cout << "      Array: ";
+    printArray(a, fullSize);
+    heapify(a, heapSize, largest, fullSize);
+  }
+  else
+  {
+    cout << "      No swap needed." << endl;
   }
 }
 
-// ─── 5. Heap Sort ───────────────────────────────────────────────────────────
 void heapSort(int a[], int n)
 {
-  cout << "\n=== Heap Sort ===" << endl;
+  cout << "\n=== Heap Sort Step by Step ===" << endl;
   cout << "Initial array: ";
   printArray(a, n);
 
-  // Phase 1 – Build max-heap
-  cout << "\n  Phase 1: Build Max-Heap (heapify from bottom up)" << endl;
+  cout << "\nPhase 1: Build max heap" << endl;
   for (int i = n / 2 - 1; i >= 0; i--)
   {
-    cout << "    Heapify subtree rooted at index " << i << " (value=" << a[i] << "):" << endl;
-    heapify(a, n, i, true);
-    cout << "      Array: ";
+    heapify(a, n, i, n);
+    cout << "  After heapify at index " << i << ": ";
     printArray(a, n);
   }
 
-  // Phase 2 – Extract max one by one
-  cout << "\n  Phase 2: Extract max element and re-heapify" << endl;
+  cout << "\nPhase 2: Move max to the end and heapify again" << endl;
   for (int i = n - 1; i > 0; i--)
   {
-    cout << "    Move max a[0]=" << a[0]
-         << " to position " << i << ", then heapify size=" << i << endl;
+    cout << "  Swap max a[0]=" << a[0]
+         << " with a[" << i << "]=" << a[i] << endl;
     swap(a[0], a[i]);
-    heapify(a, i, 0, true);
-    cout << "      Array: ";
+    cout << "  Array after moving max: ";
+    printArray(a, n);
+    heapify(a, i, 0, n);
+    cout << "  Array after heapify: ";
     printArray(a, n);
   }
 
-  cout << "Result: ";
+  cout << "\nSorted Array: ";
   printArray(a, n);
 }
 
-// ─── Merge (with trace) ──────────────────────────────────────────────────────
-void merge(int a[], int left, int mid, int right)
+void printIndent(int depth)
+{
+  for (int i = 0; i < depth; i++)
+    cout << "  ";
+}
+
+void merge(int a[], int left, int mid, int right, int depth)
 {
   int n1 = mid - left + 1;
   int n2 = right - mid;
-
   vector<int> L(n1), R(n2);
+
   for (int i = 0; i < n1; i++)
     L[i] = a[left + i];
   for (int j = 0; j < n2; j++)
     R[j] = a[mid + 1 + j];
 
-  cout << "      Merge [" << left << ".." << mid << "] and ["
+  printIndent(depth);
+  cout << "Merge indexes [" << left << ".." << mid << "] and ["
        << mid + 1 << ".." << right << "]" << endl;
-  cout << "        L: [ ";
-  for (int x : L)
-    cout << x << " ";
-  cout << "]  R: [ ";
-  for (int x : R)
-    cout << x << " ";
-  cout << "]" << endl;
 
   int i = 0, j = 0, k = left;
   while (i < n1 && j < n2)
   {
+    printIndent(depth);
+    cout << "  Compare " << L[i] << " and " << R[j];
+
     if (L[i] <= R[j])
     {
-      a[k++] = L[i++];
+      a[k] = L[i];
+      cout << " -> put " << L[i] << " at index " << k << endl;
+      i++;
     }
     else
     {
-      a[k++] = R[j++];
+      a[k] = R[j];
+      cout << " -> put " << R[j] << " at index " << k << endl;
+      j++;
     }
+    k++;
   }
-  while (i < n1)
-    a[k++] = L[i++];
-  while (j < n2)
-    a[k++] = R[j++];
 
-  cout << "        Merged segment: [ ";
+  while (i < n1)
+  {
+    printIndent(depth);
+    cout << "  Copy remaining left value " << L[i] << " to index " << k << endl;
+    a[k++] = L[i++];
+  }
+
+  while (j < n2)
+  {
+    printIndent(depth);
+    cout << "  Copy remaining right value " << R[j] << " to index " << k << endl;
+    a[k++] = R[j++];
+  }
+
+  printIndent(depth);
+  cout << "  Segment after merge: [ ";
   for (int x = left; x <= right; x++)
     cout << a[x] << " ";
   cout << "]" << endl;
 }
 
-// ─── 6. Merge Sort ──────────────────────────────────────────────────────────
 void mergeSort(int a[], int left, int right, int depth = 0)
 {
   if (left < right)
   {
     int mid = (left + right) / 2;
-    string indent(depth * 2, ' ');
-
-    cout << indent << "  Split [" << left << ".." << right
-         << "] -> left half [" << left << ".." << mid
-         << "], right half [" << mid + 1 << ".." << right << "]" << endl;
+    printIndent(depth);
+    cout << "Split [" << left << ".." << right << "] into ["
+         << left << ".." << mid << "] and ["
+         << mid + 1 << ".." << right << "]" << endl;
 
     mergeSort(a, left, mid, depth + 1);
     mergeSort(a, mid + 1, right, depth + 1);
-    merge(a, left, mid, right);
+    merge(a, left, mid, right, depth);
   }
 }
 
-// ─── Display Menu ────────────────────────────────────────────────────────────
+void runMergeSort(int a[], int n)
+{
+  cout << "\n=== Merge Sort Step by Step ===" << endl;
+  cout << "Initial array: ";
+  printArray(a, n);
+  mergeSort(a, 0, n - 1);
+  cout << "\nSorted Array: ";
+  printArray(a, n);
+}
+
 void displayMenu()
 {
   cout << "\n+--------------------------------------+" << endl;
@@ -305,18 +329,18 @@ void displayMenu()
   cout << "|  4. Selection Sort                   |" << endl;
   cout << "|  5. Heap Sort                        |" << endl;
   cout << "|  6. Merge Sort                       |" << endl;
+  cout << "|  7. Run all six step by step         |" << endl;
   cout << "|  0. Exit                             |" << endl;
   cout << "+--------------------------------------+" << endl;
   cout << "Choose an option: ";
 }
 
-// ─── Main ────────────────────────────────────────────────────────────────────
 int main()
 {
   int original[6] = {40, 60, 2, 3, 30, 20};
+  int sortedForBinary[6] = {2, 3, 20, 30, 40, 60};
   int a[6];
   int n = 6;
-
   int choice;
 
   do
@@ -335,57 +359,49 @@ int main()
       sequentialSearch(a, n, key);
       break;
     }
-
     case 2:
     {
       int key;
       cout << "Enter search key: ";
       cin >> key;
-      // Copy original then sort it first before binary searching
-      copy(original, original + n, a);
-      // cout << "\nNote: Binary search requires a sorted array." << endl;
-      cout << "Sorting a copy of the array" << endl;
-      sort(a, a + n);
-      cout << "Sorted array: ";
-      printArray(a, n);
+      copy(sortedForBinary, sortedForBinary + n, a);
       binarySearch(a, n, key);
       break;
     }
-
     case 3:
       copy(original, original + n, a);
       bubbleSort(a, n);
       break;
-
     case 4:
       copy(original, original + n, a);
       selectionSort(a, n);
       break;
-
     case 5:
       copy(original, original + n, a);
       heapSort(a, n);
       break;
-
     case 6:
       copy(original, original + n, a);
-      cout << "\n=== Merge Sort ===" << endl;
-      cout << "Initial array: ";
-      printArray(a, n);
-      cout << "Recursively split array in half, then merge sorted halves..." << endl;
-      mergeSort(a, 0, n - 1);
-      cout << "Result: ";
-      printArray(a, n);
+      runMergeSort(a, n);
       break;
-
+    case 7:
+      sequentialSearch(original, n, 30);
+      binarySearch(sortedForBinary, n, 30);
+      copy(original, original + n, a);
+      bubbleSort(a, n);
+      copy(original, original + n, a);
+      selectionSort(a, n);
+      copy(original, original + n, a);
+      heapSort(a, n);
+      copy(original, original + n, a);
+      runMergeSort(a, n);
+      break;
     case 0:
       cout << "\nGoodbye!" << endl;
       break;
-
     default:
-      cout << "\nInvalid option. Please choose 0-6." << endl;
+      cout << "\nInvalid option. Please choose 0-7." << endl;
     }
-
   } while (choice != 0);
 
   return 0;

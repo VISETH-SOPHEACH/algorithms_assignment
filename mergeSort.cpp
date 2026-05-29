@@ -2,7 +2,21 @@
 #include <vector>
 using namespace std;
 
-void merge(int a[], int left, int mid, int right)
+void printArray(int a[], int n)
+{
+  cout << "[ ";
+  for (int i = 0; i < n; i++)
+    cout << a[i] << (i < n - 1 ? ", " : " ");
+  cout << "]" << endl;
+}
+
+void printIndent(int depth)
+{
+  for (int i = 0; i < depth; i++)
+    cout << "  ";
+}
+
+void merge(int a[], int left, int mid, int right, int depth)
 {
   int n1 = mid - left + 1;
   int n2 = right - mid;
@@ -15,18 +29,27 @@ void merge(int a[], int left, int mid, int right)
   for (int j = 0; j < n2; j++)
     R[j] = a[mid + 1 + j];
 
+  printIndent(depth);
+  cout << "Merge indexes [" << left << ".." << mid << "] and ["
+       << mid + 1 << ".." << right << "]" << endl;
+
   int i = 0, j = 0, k = left;
 
   while (i < n1 && j < n2)
   {
+    printIndent(depth);
+    cout << "  Compare " << L[i] << " and " << R[j];
+
     if (L[i] <= R[j])
     {
       a[k] = L[i];
+      cout << " -> put " << L[i] << " at index " << k << endl;
       i++;
     }
     else
     {
       a[k] = R[j];
+      cout << " -> put " << R[j] << " at index " << k << endl;
       j++;
     }
     k++;
@@ -34,6 +57,9 @@ void merge(int a[], int left, int mid, int right)
 
   while (i < n1)
   {
+    printIndent(depth);
+    cout << "  Copy remaining left value " << L[i]
+         << " to index " << k << endl;
     a[k] = L[i];
     i++;
     k++;
@@ -41,34 +67,51 @@ void merge(int a[], int left, int mid, int right)
 
   while (j < n2)
   {
+    printIndent(depth);
+    cout << "  Copy remaining right value " << R[j]
+         << " to index " << k << endl;
     a[k] = R[j];
     j++;
     k++;
   }
+
+  printIndent(depth);
+  cout << "  Segment after merge: [ ";
+  for (int x = left; x <= right; x++)
+    cout << a[x] << " ";
+  cout << "]" << endl;
 }
 
-void mergeSort(int a[], int left, int right)
+void mergeSort(int a[], int left, int right, int depth = 0)
 {
   if (left < right)
   {
     int mid = (left + right) / 2;
 
-    mergeSort(a, left, mid);
-    mergeSort(a, mid + 1, right);
+    printIndent(depth);
+    cout << "Split [" << left << ".." << right << "] into ["
+         << left << ".." << mid << "] and ["
+         << mid + 1 << ".." << right << "]" << endl;
 
-    merge(a, left, mid, right);
+    mergeSort(a, left, mid, depth + 1);
+    mergeSort(a, mid + 1, right, depth + 1);
+    merge(a, left, mid, right, depth);
   }
 }
 
 int main()
 {
   int a[6] = {40, 60, 2, 3, 30, 20};
+  int n = 6;
 
-  mergeSort(a, 0, 5);
+  cout << "=== Merge Sort Step by Step ===" << endl;
+  cout << "Initial array: ";
+  printArray(a, n);
 
-  cout << "Sorted Array: ";
-  for (int i = 0; i < 6; i++)
-    cout << a[i] << " ";
+  mergeSort(a, 0, n - 1);
+
+  cout << "\nSorted Array: ";
+  printArray(a, n);
 
   return 0;
 }
